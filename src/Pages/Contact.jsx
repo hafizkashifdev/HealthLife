@@ -3,7 +3,6 @@ import {
   Box,
   Flex,
   Text,
-  Heading,
   Icon,
   Link,
   ChakraProvider,

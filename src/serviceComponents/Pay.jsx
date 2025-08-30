@@ -26,7 +26,6 @@ function MultiStepForm() {
   const [progress, setProgress] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const toast = useToast();
-  const [isBooked,setIsBooked]=useState(false);
 
   const handleChange = (e, formType) => {
     const { name, value } = e.target;
@@ -96,10 +95,6 @@ function MultiStepForm() {
             .then((response) => {
               
               setIsSubmitting(false);
-              setIsBooked(true);
-              setTimeout(()=>{
-                setIsBooked(false);
-              },2000)
               dispatch(bookingConfirmed())
               toast({
                 title: 'Appointment booked!',

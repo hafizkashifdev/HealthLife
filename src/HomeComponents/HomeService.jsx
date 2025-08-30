@@ -6,7 +6,6 @@ import {
   Stack,
   Box,
   Text,
-  Button,
   Flex,
 } from "@chakra-ui/react";
 import { BiBrain } from "react-icons/bi";

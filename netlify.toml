@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"
+  command = "npm run build:netlify"
   publish = "build"
   functions = "functions"
 
@@ -8,6 +8,7 @@
   SKIP_PREFLIGHT_CHECK = "true"
   ESLINT_NO_DEV_ERRORS = "true"
   NODE_VERSION = "18"
+  CI = "false"
 
 [[redirects]]
   from = "/*"

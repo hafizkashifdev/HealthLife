@@ -2,7 +2,7 @@ import { Route } from 'react-router-dom';
 import { Routes } from 'react-router-dom';
 
 import {About} from '../Pages/About';
-import Pricing, {Packages} from '../Pages/Packages';
+import Pricing from '../Pages/Packages';
 import { SignUp } from '../LoginComponent/Signup';
 import { Services } from '../serviceComponents/Services';
 import { SignIn } from '../LoginComponent/SignIn';

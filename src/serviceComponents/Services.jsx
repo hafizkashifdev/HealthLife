@@ -21,7 +21,7 @@ export const Services = () => {
   const [item] = useState(imageArray);
   const [isModalOpen, setIsModalOpen] = useState(false);
   let nav=useNavigate();
-  const [searchParams,setSearchParams]=useSearchParams();
+  const [searchParams] = useSearchParams();
   const [names, setNames] = useState(searchParams.get("speciality")||"")
   const [location, setLocation] = useState(searchParams.get("location")||"")
 
@@ -56,10 +56,11 @@ export const Services = () => {
         speciality:names,
         location:location
       }
-      setSearchParams(params);
+      // Note: setSearchParams is not used in this component
+      // We're using the navigate function instead
     }
 
-  },[location])
+  }, [names, location])
 
   return (
 

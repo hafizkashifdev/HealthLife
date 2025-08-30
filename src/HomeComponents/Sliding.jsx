@@ -18,8 +18,6 @@ const settings = {
 
 export default function Sliding() {
 
-  const [slider, setSlider] = React.useState (null);
-
   //  images used in the slide
   const cards = [
     'https://wallpapers.com/images/featured/doctor-kwucobzhm0etbcwy.jpg'
@@ -45,7 +43,7 @@ export default function Sliding() {
       <Box
              position="absolute"
            />
-      <Slider {...settings} ref={(slider) => setSlider(slider)}>
+      <Slider {...settings}>
         {cards.map((url, index) => (
           <Box
             key={index}

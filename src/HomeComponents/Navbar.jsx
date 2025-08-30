@@ -11,7 +11,7 @@ import {
   IconButton,
   DrawerContent
 } from "@chakra-ui/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Avatar,
   Link as ChakraLink,
@@ -26,7 +26,6 @@ import {
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { authLogout } from "../reduxAuth/action";
 import axios from "axios";
@@ -35,21 +34,17 @@ export default function NavBar(){
 
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const btnRef = useRef();
-  const [currentPage, setCurrentPage] = useState(window.location.pathname);
   const isAuth = useSelector((store)=>store.AuthReducer.isAuth);
   let isBooked = useSelector((store)=>store.AuthReducer.isBooked);
   const [userDetails, setUserDetails] = useState([]);
 
-
   const navigate = useNavigate();
   const dispatch=useDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [size, setSize] = useState('sm');
   const storedUsers = localStorage.getItem("users");
   const userName = storedUsers ? JSON.parse(storedUsers) : [];
   let userIndex; // Declare userIndex outside the axios.get callback
   let emailFromStore=useSelector((store)=>store.AuthReducer.storedEmail);
-  let foundName=userName.find((user)=>user.email==emailFromStore);
 
   const handleLogout = () => {
     dispatch(authLogout())
@@ -68,11 +63,11 @@ export default function NavBar(){
 
           if (userIndex) {
             setUserDetails(userIndex.userDetails);
-            isBooked=false;
+            // Note: isBooked is a prop from Redux store, we shouldn't modify it here
           }
         });
     }
-  }, [isAuth,isBooked]);
+  }, [isAuth, isBooked, emailFromStore]);
 
   const linkAction = isAuth ? handleLogout : null;
 
@@ -98,176 +93,131 @@ export default function NavBar(){
       <Box
         position="fixed"
         width={"-webkit-full-available"}
+        bg="white"
+        boxShadow="0 2px 4px rgba(0,0,0,0.1)"
         top={0}
         left={0}
         right={0}
-        bg="transparent"
+        zIndex={1000}
       >
-
-      <Box
-        bg={"rgb(237,243,248)"}
-        px={4} color={"white"} fontWeight={"bold"} >
-          <Flex h={16} alignItems={"center"} justifyContent={"space-between" }>
-            <IconButton
-              as = {HamburgerIcon}
-              _hover={{textDecoration: "none",}}
-              size={"md"}
-              icon={isOpen ? "" :""}
-              aria-label={"Open Menu"}
-              display={{ md: "none" }}
-              onClick={isOpen ? onClose : onOpen}
-            />
-              <Box>
-                <Link to="/">
-                  <img src="logo.png" alt="Logo" width={"200px"} height={"150px"} />
-                </Link>
+        <Flex
+          bg="white"
+          color="black"
+          minH="60px"
+          py={{ base: 2 }}
+          px={{ base: 4 }}
+          align="center"
+          justify="space-between"
+        >
+          <Flex align="center" justify="center">
+            <Link to="/">
+              <Box fontSize="2xl" fontWeight="bold" color="#009E60">
+                Forever Care
               </Box>
+            </Link>
+          </Flex>
 
-              <HStack spacing={8} alignItems={"center"} color={"black"}>
+          <Flex display={{ base: "none", md: "flex" }} align="center">
+            <HStack spacing={8}>
+              {Paths.map((path) => (
+                <Link key={path.path} to={path.path}>
+                  <Box
+                    px={3}
+                    py={2}
+                    rounded="md"
+                    textStyle="sm"
+                    fontWeight="500"
+                    _hover={{
+                      textDecoration: "none",
+                      bg: "gray.100",
+                    }}
+                  >
+                    {path.label}
+                  </Box>
+                </Link>
+              ))}
+            </HStack>
+          </Flex>
 
-                <HStack
-                  as={"nav"}
-                  spacing={4}
-                  display={{ base: "none", md: "flex" }}
-                  justifyContent="center"
-                >
-                  {Paths.map((ele) => (
-                    <Link key={ele.label} to={ele.path}>
-                      <ChakraLink
-                        px={2}
-                        py={1}
-                        rounded={'md'}
-                        fontWeight={"500"}
-                        letterSpacing={1.2}
-                        _hover={{
-                          textDecoration: 'none',
-                          color:"#329938"
-                        }}
-                      >
-                        {ele.label}
-                      </ChakraLink>
-                    </Link>
-                  ))}
-                </HStack>
-              </HStack>
-            <Flex alignItems={"center"}>
+          <Flex align="center">
+            <Stack direction="row" spacing={7}>
               {isAuth ? (
                 <Menu>
                   <MenuButton
                     as={Button}
-                    rounded={"full"}
-                    variant={"link"}
-                    cursor={"pointer"}
+                    rounded="full"
+                    variant="link"
+                    cursor="pointer"
                     minW={0}
                   >
-                    <Avatar
-                      bgColor={"black"}
-                      size={"sm"}
-                      src={""}
-                    />
-                    {/* <Button bgColor={"#009E60"} color={"white"}></Button> */}
+                    <Avatar size="sm" src="https://bit.ly/broken-link" />
                   </MenuButton>
-
-                  <MenuList color={"black"}>
-                    <MenuItem _hover={{textDecoration: "none", color: "#2e9e33"}}>
-                    </MenuItem>
-                    <MenuItem _hover={{textDecoration: "none", color: "#329938"}}>
-                      User Details
-                    </MenuItem>
-                    {/* <Link to="/appointments"> */}
-                    <MenuItem
-                      onClick={openDrawer}
-                      ref={btnRef}
-                      _hover={{
-                        textDecoration: "none",
-                        color: "#329938"
-                      }}
-                    >
-                      My Appointments
-                    </MenuItem>
-                    {/* </Link> */}
-                    {isDrawerVisible && (
-                      <Drawer
-                        isOpen={isDrawerVisible}
-                        placement='right'
-                        onClose={closeDrawer}
-                        finalFocusRef={btnRef}
-                      >
-                        <DrawerOverlay />
-                        <DrawerContent>
-                          <DrawerCloseButton />
-                          <DrawerHeader>My Appointments</DrawerHeader>
-                          <DrawerBody>
-                            {userDetails.map((ele, index) => (
-                              <div key={index}>
-                                <p>Name: {ele.name}</p>
-                                <p>Email: {ele.email}</p>
-                                <p>Address: {ele.address}</p>
-                                <p>Issue: {ele.issue}</p>
-                              </div>
-                            ))}
-                          </DrawerBody>
-                        </DrawerContent>
-                      </Drawer>
-                    )}
+                  <MenuList>
+                    <MenuItem>Profile</MenuItem>
                     <MenuDivider />
-
-                    <MenuItem
-                      onClick={linkAction}
-                      _hover={{
-                        textDecoration: "none",
-                        color: "#329938"
-                      }}
-                    >
-                      Logout
-                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
                   </MenuList>
                 </Menu>
               ) : (
-                <Link key={"login"} to="/signup" >
-                  <ChakraLink
-                    px={2}
-                    py={1}
-                    _hover={{
-                      textDecoration: 'none',
-                      color: "black"
-                    }}
-                    color={"black"}
-                  >
-                    <Button bgColor={"#009E60"} color={"white"}  _hover={{
-                      textDecoration: 'none',
-                      color: "black",
-                      bg:"white"
-                    }}>SIGN-IN</Button>
-                  </ChakraLink>
-                </Link>
+                <Stack direction="row" spacing={4}>
+                  <Link to="/signin">
+                    <Button variant="ghost">Sign In</Button>
+                  </Link>
+                  <Link to="/signup">
+                    <Button bg="#009E60" color="white" _hover={{ bg: "#008B52" }}>
+                      Sign Up
+                    </Button>
+                  </Link>
+                </Stack>
               )}
-            </Flex>
+            </Stack>
           </Flex>
 
-          {isOpen ? (
-            <Box pb={4} display={{ md: "none" }}>
-              <Stack as={"nav"} spacing={4}  bg={"white"} borderRadius={5} padding={2} textAlign={"left"} color="black">
-                {Paths.map((ele) => (
-                  <Link key={ele.label} to={ele.path}>
-                    <ChakraLink
-                      px={2}
-                      py={1}
-                      rounded={'md'}
-                      _hover={{
-                      textDecoration: 'none',
-                      bg: "#AED943",
-                    }}>
-                      {ele.label}
-                    </ChakraLink>
-                  </Link>
-                ))}
-              </Stack>
-            </Box>
-          ) : null}
-        </Box>
+          <IconButton
+            display={{ base: "flex", md: "none" }}
+            onClick={openDrawer}
+            icon={<HamburgerIcon />}
+            variant="ghost"
+            aria-label="Open menu"
+            ref={btnRef}
+          />
+        </Flex>
       </Box>
+
+      <Drawer
+        isOpen={isDrawerVisible}
+        placement="right"
+        onClose={closeDrawer}
+        finalFocusRef={btnRef}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>Menu</DrawerHeader>
+          <DrawerBody>
+            <Stack spacing={4}>
+              {Paths.map((path) => (
+                <Link key={path.path} to={path.path} onClick={closeDrawer}>
+                  <Box
+                    px={3}
+                    py={2}
+                    rounded="md"
+                    textStyle="sm"
+                    fontWeight="500"
+                    _hover={{
+                      textDecoration: "none",
+                      bg: "gray.100",
+                    }}
+                  >
+                    {path.label}
+                  </Box>
+                </Link>
+              ))}
+            </Stack>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </Box>
-  </div>
+   </div>
   );
 }

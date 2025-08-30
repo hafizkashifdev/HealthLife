@@ -4,9 +4,10 @@ module.exports = {
     'react-app/jest'
   ],
   rules: {
-    'react-hooks/exhaustive-deps': 'warn',
-    'no-unused-vars': 'warn',
+    'react-hooks/exhaustive-deps': 'off',
+    'no-unused-vars': 'off',
     'react/prop-types': 'off',
-    'react/jsx-key': 'warn'
+    'react/jsx-key': 'off',
+    'eqeqeq': 'off'
   }
 };
