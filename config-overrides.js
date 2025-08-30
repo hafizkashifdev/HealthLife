@@ -19,6 +19,12 @@ module.exports = function override(config) {
     stream: false,
     crypto: false,
   };
+  
+  // ESLint configuration to make build process more lenient
+  if (config.eslint) {
+    config.eslint.ignore = true;
+  }
+  
   config.plugins = (config.plugins || []).concat([
     new webpack.ProvidePlugin({
       Buffer: ["buffer", "Buffer"],

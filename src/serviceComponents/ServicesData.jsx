@@ -66,7 +66,7 @@ function refreshMessages() {
 }
 
 const ServicesData = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
     const dispatch = useDispatch();
    
     const dataFromStore = useSelector((store) => ({
@@ -74,8 +74,6 @@ const ServicesData = () => {
         loading: store.ServiceReducer.isLoadingService,
         error: store.ServiceReducer.isErrorService,
     }), shallowEqual);
-
-    
 
     useEffect(() => {
         const speciality = searchParams.get("speciality");
@@ -92,16 +90,9 @@ const ServicesData = () => {
 
     const [value, setValue] = useState(0);
     const ref = useRef(null);
-    const [messages, setMessages] = useState(() => refreshMessages());
-
+    const [messages] = useState(() => refreshMessages());
 
     if (dataFromStore.loading) {
-        // return (
-        //     <img
-        //         src="https://i.gifer.com/ZKZg.gif"
-        //         style={{ margin: "auto", alignItems: "center", width: "5vw" }}
-        //     />
-        // );
         return(
             <>
             <Box padding='6' mt={"100px"} boxShadow='lg' bg='white' width={"50%"} ml={"10%"}>
@@ -124,12 +115,6 @@ const ServicesData = () => {
         )
     }
 
-//    useEffect(() => {
-//         if (ref.current) { // Add a null check here
-//             ref.current.ownerDocument.body.scrollTop = 0;
-//             setMessages(refreshMessages());
-//         }
-//     }, [value, setMessages]);
     return (
         <DIV>
             <div className='outerDiv'>
